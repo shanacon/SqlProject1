@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.font as font
+from Event import *
 window = tk.Tk()
 ###
 BtnFont = font.Font(size=20)
@@ -28,6 +29,8 @@ variable = tk.StringVar(window)
 type_of_tag = tk.OptionMenu(window, BtnFont, variable)
 type_of_tag.config(width = 11, bg = "light blue")
 type_of_tag.place(x = 370, y = 108)
+### set command
+New_Type_Btn.config(command = lambda:NewType(Type_Input.get()))
 window.title('FileTagger')
 window.geometry('800x300')
 window.mainloop()
