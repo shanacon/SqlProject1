@@ -6,6 +6,10 @@ window = tk.Tk()
 BtnFont = font.Font(size=20)
 EntryFont = font.Font(size=14)
 ###
+TypeList = []
+TagList = []
+
+###
 New_Type_Btn = tk.Button(window, text ="New Type", bg = "light blue", width = '10', height = '1', font = BtnFont)
 New_Type_Btn.place(x = 50, y = 50)
 New_Tag_Btn = tk.Button(window, text ="New Tag", bg = "light blue", width = '10', height = '1', font = BtnFont)
@@ -26,11 +30,15 @@ file_path.insert(0, 'input path')
 file_path.place(x = 50, y = 150)
 ###
 variable = tk.StringVar(window)
-type_of_tag = tk.OptionMenu(window, BtnFont, variable)
-type_of_tag.config(width = 11, bg = "light blue")
+type_of_tag = tk.OptionMenu(window, variable, "")
+type_of_tag.config(width = 11, bg = "light blue", font = EntryFont)
 type_of_tag.place(x = 370, y = 108)
 ### set command
-New_Type_Btn.config(command = lambda:NewType(Type_Input.get()))
+TypeList = RefreshDropDown(type_of_tag, variable)
+if TypeList :
+    variable.set(TypeList[0])
+New_Type_Btn.config(command = lambda:NewType(Type_Input, type_of_tag, variable))
+New_Tag_Btn.config(command = lambda:NewTag(Tag_Input, variable))
 window.title('FileTagger')
 window.geometry('800x300')
 window.mainloop()
