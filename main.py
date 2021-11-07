@@ -57,8 +57,7 @@ def _NewTag() :
 def _Browse() :
     global Now_fileID
     Now_fileID = Browse(file_path, StatusText)
-    if Now_fileID != None :
-        SetTagsShow()
+    SetTagsShow()
 def _Check_Path() :
     global Now_fileID
     Now_fileID = Check_Path(file_path.get())

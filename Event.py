@@ -125,7 +125,6 @@ def GetTagidByName(TagName, StatusText):
 def GetFileidByPath(path, StatusText):
     if path == None or path == "input path" :
         StatusText['text'] = "no such file"
-    else :
         return -1
     con = lite.connect('FileData.db')
     cur=con.cursor()
