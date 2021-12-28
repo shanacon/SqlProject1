@@ -84,15 +84,18 @@ def RefreshTagSystem(DropDown_1, var_1, type):
     DropDown_1['menu'].delete(0, 'end')
     cur=con.cursor()
     cur.execute (f"SELECT type_id from Type WHERE name = '{type}'")
-    type = cur.fetchone()[0]
-    TagList = []
-    cur.execute(f"SELECT name from Tag WHERE type = {type}")
-    for item in  cur.fetchall():
-        TagList.append(item[0])
-    for item in TagList: 
-        DropDown_1['menu'].add_command(label=item, command=tk._setit(var_1, item))
-    if TagList :
-        var_1.set(TagList[0])
+    if type != "" :
+        type = cur.fetchone()[0]
+        TagList = []
+        cur.execute(f"SELECT name from Tag WHERE type = {type}")
+        for item in cur.fetchall():
+            TagList.append(item[0])
+        for item in TagList: 
+            DropDown_1['menu'].add_command(label=item, command=tk._setit(var_1, item))
+        if TagList :
+            var_1.set(TagList[0])
+        else : 
+            var_1.set("")
 ###
 def DeleteRelation(file_id, tag_id) :
     cur=con.cursor()

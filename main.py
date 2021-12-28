@@ -53,7 +53,7 @@ def OpenExploer(path):
     os.startfile(path)
 def _NewTag() :
     NewTag(Tag_Input, variable, StatusText)
-    RefreshTagSystem(tag_d, tag_var, variable.get())
+    RefreshTagSystem(tag_d, tag_var, type_var.get())
 def _Browse() :
     global Now_fileID
     Now_fileID = Browse(file_path, StatusText)
