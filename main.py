@@ -73,10 +73,16 @@ def _SearchByString() :
     SetSearchResultWindow(PathList)
 def _Login():
     if Login(User_Input.get(), PSW_Input.get()) :
-        showUI()
+        Hide_Login()
+        ShowUI()
         StatusText['text'] = ""
     else :
         StatusText['text'] = "login error"
+def _Disconnect():
+    global con
+    con = None
+    Show_Login()
+    HideUI()
 ### Label
 StatusText = tk.Label(window, text ="", font = EntryFont)
 StatusText.place(x = 380, y = 60)
@@ -88,11 +94,10 @@ Add_Tag_Btn = tk.Button(window, text ="Add Tag", bg = "light blue", width = '10'
 Check_Btn = tk.Button(window, text ="Check", bg = "light blue", width = '10', height = '1', font = EntryFont)
 Add_Tag_Btn2 = tk.Button(window, text ="Add Tag", bg = "light blue", width = '10', height = '1', font = EntryFont)
 Search_Btn = tk.Button(window, text ="Search", bg = "light blue", width = '10', height = '1', font = BtnFont)
+Disconnect_Btn = tk.Button(window, text ="Disconnect", bg = "light blue", width = '10', height = '1', font = EntryFont)
 ##
 Regis_Btn = tk.Button(window, text ="Sign up", bg = "light blue", width = '10', height = '1', font = BtnFont)
-Regis_Btn.place(x = 650, y = 150)
 Login_Btn = tk.Button(window, text ="Login", bg = "light blue", width = '10', height = '1', font = BtnFont)
-Login_Btn.place(x = 650, y = 305)
 ### input entry
 Type_Input = tk.Entry(window, font = BtnFont, width = '11')
 Tag_Input = tk.Entry(window, font = BtnFont, width = '11')
@@ -104,19 +109,15 @@ Search_Input = tk.Entry(window, font = EntryFont, width = '34')
 #
 User_Input = tk.Entry(window, font = EntryFont, width = '20')
 User_Input.insert(0, 'input username')
-User_Input.place(x = 650, y = 250)
+
 PSW_Input = tk.Entry(window, font = EntryFont, width = '20', show="*")
-PSW_Input.place(x = 650, y = 280)
 #
 R_User_Input = tk.Entry(window, font = EntryFont, width = '20')
 R_User_Input.insert(0, 'input username')
-R_User_Input.place(x = 650, y = 50)
 R_PSW_Input = tk.Entry(window, font = EntryFont, width = '20', show="*")
-R_PSW_Input.place(x = 650, y = 80)
 ### checkbox
 IsAdmin = tk.BooleanVar()
 IsAdmin_Btn = tk.Checkbutton(window, text='Admin', var=IsAdmin, font = EntryFont)
-IsAdmin_Btn.place(x = 650, y = 110)
 ### dropdown
 variable = tk.StringVar(window)
 type_of_tag = tk.OptionMenu(window, variable, "")
@@ -138,8 +139,9 @@ Add_Tag_Btn.config(command = lambda:AddTagByDropDown())
 Add_Tag_Btn2.config(command = lambda:AddTagByEntry())
 Search_Btn.config(command = lambda:_SearchByString())
 Login_Btn.config(command = lambda:_Login())
+Disconnect_Btn.config(command = lambda:_Disconnect())
 ###
-def showUI():
+def ShowUI():
     global TypeList  
     TypeList = RefreshTypeList(type_of_tag, variable, type_d, type_var)
     New_Type_Btn.place(x = 50, y = 50)
@@ -157,8 +159,44 @@ def showUI():
     type_of_tag.place(x = 378, y = 108)
     type_d.place(x = 208, y = 175)
     tag_d.place(x = 208, y = 215)
+    Disconnect_Btn.place(x = 0, y = 0)
+def HideUI():
+    New_Type_Btn.place_forget()
+    New_Tag_Btn.place_forget()
+    Browse_Btn.place_forget()
+    Add_Tag_Btn.place_forget()
+    Check_Btn.place_forget()
+    Add_Tag_Btn2.place_forget()
+    Search_Btn.place_forget()
+    Type_Input.place_forget()
+    Tag_Input.place_forget()
+    file_path.place_forget()
+    Tag_E.place_forget()
+    Search_Input.place_forget()
+    type_of_tag.place_forget()
+    type_d.place_forget()
+    tag_d.place_forget()
+    Disconnect_Btn.place_forget()
+def Show_Login():
+    R_User_Input.place(x = 650, y = 50)
+    R_PSW_Input.place(x = 650, y = 80)
+    IsAdmin_Btn.place(x = 650, y = 110)
+    User_Input.place(x = 650, y = 250)
+    PSW_Input.place(x = 650, y = 280)
+    Regis_Btn.place(x = 650, y = 150)
+    Login_Btn.place(x = 650, y = 305)
+def Hide_Login() :
+    R_User_Input.place_forget()
+    R_PSW_Input.place_forget()
+    IsAdmin_Btn.place_forget()
+    User_Input.place_forget()
+    PSW_Input.place_forget()
+    Regis_Btn.place_forget()
+    Login_Btn.place_forget()
+
 ###
 Initialize()
+Show_Login()
 window.title('FileTagger')
 window.geometry('1000x400')
 window.mainloop()
