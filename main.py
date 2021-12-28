@@ -129,7 +129,6 @@ tag_var = tk.StringVar(window)
 tag_d = tk.OptionMenu(window, tag_var, "")
 tag_d.config(width = 12, bg = "light blue", font = EntryFont)
 ### set command
-TypeList = RefreshTypeList(type_of_tag, variable, type_d, type_var)
 New_Type_Btn.config(command = lambda:NewType(Type_Input, type_of_tag, variable, type_d, type_var, StatusText))
 New_Tag_Btn.config(command = lambda:_NewTag())
 Browse_Btn.config(command = lambda:_Browse())
@@ -142,7 +141,7 @@ Login_Btn.config(command = lambda:_Login())
 ###
 def showUI():
     global TypeList  
-    TypeList = RefreshTypeList(type_of_tag, variable, type_d, type_var)
+    # TypeList = RefreshTypeList(type_of_tag, variable, type_d, type_var)
     New_Type_Btn.place(x = 50, y = 50)
     New_Tag_Btn.place(x = 50, y = 100)
     Browse_Btn.place(x = 50, y = 175)
@@ -159,6 +158,7 @@ def showUI():
     type_d.place(x = 208, y = 175)
     tag_d.place(x = 208, y = 215)
 ###
+Initialize()
 window.title('FileTagger')
 window.geometry('1000x400')
 window.mainloop()
