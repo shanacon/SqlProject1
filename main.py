@@ -71,51 +71,63 @@ def _SearchByString() :
     for id in FileidList :
         PathList.append(GetPathByFileid(id), StatusText)
     SetSearchResultWindow(PathList)
+def _Login():
+    if Login(User_Input.get(), PSW_Input.get()) :
+        showUI()
+        StatusText['text'] = ""
+    else :
+        StatusText['text'] = "login error"
 ### Label
 StatusText = tk.Label(window, text ="", font = EntryFont)
 StatusText.place(x = 380, y = 60)
 ### button
 New_Type_Btn = tk.Button(window, text ="New Type", bg = "light blue", width = '10', height = '1', font = BtnFont)
-New_Type_Btn.place(x = 50, y = 50)
 New_Tag_Btn = tk.Button(window, text ="New Tag", bg = "light blue", width = '10', height = '1', font = BtnFont)
-New_Tag_Btn.place(x = 50, y = 100)
 Browse_Btn = tk.Button(window, text ="Browse", bg = "light blue", width = '10', height = '1', font = BtnFont)
-Browse_Btn.place(x = 50, y = 175)
 Add_Tag_Btn = tk.Button(window, text ="Add Tag", bg = "light blue", width = '10', height = '1', font = BtnFont)
-Add_Tag_Btn.place(x = 370, y = 190)
 Check_Btn = tk.Button(window, text ="Check", bg = "light blue", width = '10', height = '1', font = EntryFont)
-Check_Btn.place(x = 410, y = 142)
 Add_Tag_Btn2 = tk.Button(window, text ="Add Tag", bg = "light blue", width = '10', height = '1', font = EntryFont)
-Add_Tag_Btn2.place(x = 370, y = 260)
 Search_Btn = tk.Button(window, text ="Search", bg = "light blue", width = '10', height = '1', font = BtnFont)
-Search_Btn.place(x = 370, y = 325)
+##
+Regis_Btn = tk.Button(window, text ="Sign up", bg = "light blue", width = '10', height = '1', font = BtnFont)
+Regis_Btn.place(x = 650, y = 150)
+Login_Btn = tk.Button(window, text ="Login", bg = "light blue", width = '10', height = '1', font = BtnFont)
+Login_Btn.place(x = 650, y = 305)
 ### input entry
 Type_Input = tk.Entry(window, font = BtnFont, width = '11')
-Type_Input.place(x = 210, y = 58)
 Tag_Input = tk.Entry(window, font = BtnFont, width = '11')
-Tag_Input.place(x = 210, y = 108)
 file_path = tk.Entry(window, font = EntryFont, width = '38')
 file_path.insert(0, 'input path')
-file_path.place(x = 50, y = 150)
 Tag_E = tk.Entry(window, font = EntryFont, width = '16')
 Tag_E.insert(0, 'input tag')
-Tag_E.place(x = 210, y = 265)
 Search_Input = tk.Entry(window, font = EntryFont, width = '34')
-Search_Input.place(x = 50, y = 337)
+#
+User_Input = tk.Entry(window, font = EntryFont, width = '20')
+User_Input.insert(0, 'input username')
+User_Input.place(x = 650, y = 250)
+PSW_Input = tk.Entry(window, font = EntryFont, width = '20', show="*")
+PSW_Input.place(x = 650, y = 280)
+#
+R_User_Input = tk.Entry(window, font = EntryFont, width = '20')
+R_User_Input.insert(0, 'input username')
+R_User_Input.place(x = 650, y = 50)
+R_PSW_Input = tk.Entry(window, font = EntryFont, width = '20', show="*")
+R_PSW_Input.place(x = 650, y = 80)
+### checkbox
+IsAdmin = tk.BooleanVar()
+IsAdmin_Btn = tk.Checkbutton(window, text='Admin', var=IsAdmin, font = EntryFont)
+IsAdmin_Btn.place(x = 650, y = 110)
 ### dropdown
 variable = tk.StringVar(window)
 type_of_tag = tk.OptionMenu(window, variable, "")
 type_of_tag.config(width = 11, bg = "light blue", font = EntryFont)
-type_of_tag.place(x = 378, y = 108)
 #
 type_var = tk.StringVar(window)
 type_d = tk.OptionMenu(window, type_var, "")
 type_d.config(width = 12, bg = "light blue", font = EntryFont)
-type_d.place(x = 208, y = 175)
 tag_var = tk.StringVar(window)
 tag_d = tk.OptionMenu(window, tag_var, "")
 tag_d.config(width = 12, bg = "light blue", font = EntryFont)
-tag_d.place(x = 208, y = 215)
 ### set command
 TypeList = RefreshTypeList(type_of_tag, variable, type_d, type_var)
 New_Type_Btn.config(command = lambda:NewType(Type_Input, type_of_tag, variable, type_d, type_var, StatusText))
@@ -126,8 +138,28 @@ type_var.trace("w", lambda *args: RefreshTagSystem(tag_d, tag_var, type_var.get(
 Add_Tag_Btn.config(command = lambda:AddTagByDropDown())
 Add_Tag_Btn2.config(command = lambda:AddTagByEntry())
 Search_Btn.config(command = lambda:_SearchByString())
+Login_Btn.config(command = lambda:_Login())
+###
+def showUI():
+    global TypeList  
+    TypeList = RefreshTypeList(type_of_tag, variable, type_d, type_var)
+    New_Type_Btn.place(x = 50, y = 50)
+    New_Tag_Btn.place(x = 50, y = 100)
+    Browse_Btn.place(x = 50, y = 175)
+    Add_Tag_Btn.place(x = 370, y = 190)
+    Check_Btn.place(x = 410, y = 142)
+    Add_Tag_Btn2.place(x = 370, y = 260)
+    Search_Btn.place(x = 370, y = 325)
+    Type_Input.place(x = 210, y = 58)
+    Tag_Input.place(x = 210, y = 108)
+    file_path.place(x = 50, y = 150)
+    Tag_E.place(x = 210, y = 265)
+    Search_Input.place(x = 50, y = 337)
+    type_of_tag.place(x = 378, y = 108)
+    type_d.place(x = 208, y = 175)
+    tag_d.place(x = 208, y = 215)
 ###
 window.title('FileTagger')
-window.geometry('800x400')
+window.geometry('1000x400')
 window.mainloop()
 ###

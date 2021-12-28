@@ -2,7 +2,10 @@ import sqlite3 as lite
 import tkinter as tk
 import os
 from tkinter import filedialog
+import MySQLdb
 ###
+UserName = ""
+Pswd = ""
 def NewType(Type_Input, DropDown_1, var_1, DropDown_2, var_2, StatusText) :
     con = lite.connect('FileData.db')
     if Type_Input.get()=="":
@@ -197,3 +200,14 @@ def SearchByString(input, StatusText) :
     else :
         StatusText['text'] = "No file Found"
     return ret
+###
+def Login(username, psw):
+    global UserName
+    global Pswd
+    try :
+        con = MySQLdb.connect(host="localhost", user = username, password = psw, db = "filedata")
+        UserName = username
+        Pswd = psw
+        return True
+    except :
+        return False
