@@ -12,9 +12,9 @@ def NewType(Type_Input, DropDown_1, var_1, DropDown_2, var_2, StatusText) :
     if Type_Input.get()=="":
         StatusText['text'] = "Please input Type name"
     else :
-        with con:
-            cur=con.cursor()
-            cur.execute(f"INSERT into Type Values(null, '{Type_Input.get()}')")
+        cur=con.cursor()
+        cur.execute(f"INSERT into type Values(null, '{Type_Input.get()}')")
+        con.commit()
     Type_Input.delete(0, 'end')
     return RefreshTypeList(DropDown_1, var_1, DropDown_2, var_2)
 ###
@@ -23,7 +23,8 @@ def RefreshTypeList(DropDown_1, var_1, DropDown_2, var_2):
     DropDown_2['menu'].delete(0, 'end')
     cur=con.cursor()
     TypeList = []
-    for item in cur.execute ("SELECT name from Type") :
+    cur.execute ("SELECT name from type")
+    for item in cur.fetchall():
         TypeList.append(item[0])
     for item in TypeList: 
         DropDown_1['menu'].add_command(label=item, command=tk._setit(var_1, item))
@@ -33,18 +34,18 @@ def RefreshTypeList(DropDown_1, var_1, DropDown_2, var_2):
     return TypeList
 ###
 def NewTag(Tag_Input, variable, StatusText):
-    with con:
-        cur=con.cursor()
-        if Tag_Input.get() != "":
-            if variable.get() != "":
-                cur.execute(f"SELECT type_id from Type WHERE name='{variable.get()}'")
-                id = cur.fetchone()[0]
-                cur.execute(f"INSERT into Tag Values(null, '{Tag_Input.get()}', '{id}')")
-                Tag_Input.delete(0, 'end')
-            else:
-                StatusText['text'] = "Please select Type"
+    cur=con.cursor()
+    if Tag_Input.get() != "":
+        if variable.get() != "":
+            cur.execute(f"SELECT type_id from Type WHERE name='{variable.get()}'")
+            id = cur.fetchone()[0]
+            cur.execute(f"INSERT into Tag Values(null, '{Tag_Input.get()}', '{id}')")
+            con.commit()
+            Tag_Input.delete(0, 'end')
         else:
-            StatusText['text'] = "Please input Tag"
+            StatusText['text'] = "Please select Type"
+    else:
+        StatusText['text'] = "Please input Tag"
 ###
 def Browse(file_path, StatusText):
     file_path.delete(0, 'end')
@@ -68,16 +69,16 @@ def Check_Path(path) :
     return file_id
 ###
 def InsertPath(path):
-    with con:
-        cur=con.cursor()
-        cur.execute(f"Insert into File Values(null, '{path}', '{os.path.basename(path)}')")
-        cur.execute(f"SELECT file_id from File WHERE path = '{path}'")
-        return cur.fetchone()[0]
+    cur=con.cursor()
+    cur.execute(f"Insert into File Values(null, '{path}', '{os.path.basename(path)}')")
+    con.commit()
+    cur.execute(f"SELECT file_id from File WHERE path = '{path}'")
+    return cur.fetchone()[0]
 ###
 def SetFileTag(file_id,tag_id):
-    with con:
-        cur=con.cursor()
-        cur.execute(f"Insert into Relation Values('{file_id}', '{tag_id}')")
+    cur=con.cursor()
+    cur.execute(f"Insert into Relation Values('{file_id}', '{tag_id}')")
+    con.commit()
 ##
 def RefreshTagSystem(DropDown_1, var_1, type):
     DropDown_1['menu'].delete(0, 'end')
@@ -85,7 +86,8 @@ def RefreshTagSystem(DropDown_1, var_1, type):
     cur.execute (f"SELECT type_id from Type WHERE name = '{type}'")
     type = cur.fetchone()[0]
     TagList = []
-    for item in cur.execute(f"SELECT name from Tag WHERE type = {type}") :
+    cur.execute(f"SELECT name from Tag WHERE type = {type}")
+    for item in  cur.fetchall():
         TagList.append(item[0])
     for item in TagList: 
         DropDown_1['menu'].add_command(label=item, command=tk._setit(var_1, item))
@@ -100,7 +102,8 @@ def DeleteRelation(file_id, tag_id) :
 def GetTagsByFileID(file_id) :
     cur=con.cursor()
     TagList = []
-    for tag_id in cur.execute(f"SELECT tag_id from Relation WHERE file_id = {file_id}") :
+    cur.execute(f"SELECT tag_id from Relation WHERE file_id = {file_id}")
+    for tag_id in cur.fetchall():
         TagList.append(tag_id[0])
     return TagList
 ###

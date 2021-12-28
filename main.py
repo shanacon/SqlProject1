@@ -69,7 +69,7 @@ def _SearchByString() :
     FileidList = SearchByString(Search_Input.get(), StatusText)
     PathList = []
     for id in FileidList :
-        PathList.append(GetPathByFileid(id), StatusText)
+        PathList.append(GetPathByFileid(id, StatusText))
     SetSearchResultWindow(PathList)
 def _Login():
     if Login(User_Input.get(), PSW_Input.get()) :
@@ -141,7 +141,7 @@ Login_Btn.config(command = lambda:_Login())
 ###
 def showUI():
     global TypeList  
-    # TypeList = RefreshTypeList(type_of_tag, variable, type_d, type_var)
+    TypeList = RefreshTypeList(type_of_tag, variable, type_d, type_var)
     New_Type_Btn.place(x = 50, y = 50)
     New_Tag_Btn.place(x = 50, y = 100)
     Browse_Btn.place(x = 50, y = 175)
