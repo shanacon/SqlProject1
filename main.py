@@ -176,6 +176,8 @@ def HideUI():
     type_of_tag.place_forget()
     type_d.place_forget()
     tag_d.place_forget()
+    RemoveAllTagBtn()
+    StatusText['text'] = ""
     Disconnect_Btn.place_forget()
 def Show_Login():
     R_User_Input.place(x = 650, y = 50)

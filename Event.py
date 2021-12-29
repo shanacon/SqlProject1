@@ -15,6 +15,7 @@ def NewType(Type_Input, DropDown_1, var_1, DropDown_2, var_2, StatusText) :
         cur=con.cursor()
         cur.execute(f"INSERT into type Values(null, '{Type_Input.get()}')")
         con.commit()
+        StatusText['text'] = ""
     Type_Input.delete(0, 'end')
     return RefreshTypeList(DropDown_1, var_1, DropDown_2, var_2)
 ###
@@ -42,6 +43,7 @@ def NewTag(Tag_Input, variable, StatusText):
             cur.execute(f"INSERT into Tag Values(null, '{Tag_Input.get()}', '{id}')")
             con.commit()
             Tag_Input.delete(0, 'end')
+            StatusText['text'] = ""
         else:
             StatusText['text'] = "Please select Type"
     else:
@@ -53,6 +55,7 @@ def Browse(file_path, StatusText):
     if filename == None or filename == "":
        StatusText['text'] = "please choose folder"
        return None
+    StatusText['text'] = ""
     file_path.insert(0, filename)
     return Check_Path(filename)
 ###
@@ -120,6 +123,7 @@ def GetTagidByName(TagName, StatusText):
     cur.execute(f"SELECT tag_id from Tag WHERE name = '{TagName}'")
     tmp = cur.fetchone()
     if tmp :
+        StatusText['text'] = ""
         return tmp[0]
     else :
         StatusText['text'] = "no such tag"
@@ -131,6 +135,7 @@ def GetFileidByPath(path, StatusText):
     cur.execute (f"SELECT file_id from File WHERE path = '{path}'")
     tmp = cur.fetchone()
     if tmp :
+        StatusText['text'] = ""
         return tmp[0]
     else :
         StatusText['text'] = "no such file"
@@ -139,6 +144,7 @@ def GetNameByTagid(TagID, StatusText):
     cur.execute(f"SELECT name from Tag WHERE tag_id = {TagID}")
     tmp = cur.fetchone()
     if tmp :
+        StatusText['text'] = ""
         return tmp[0]
     else :
         StatusText['text'] = "no such tag id"
@@ -147,6 +153,7 @@ def GetPathByFileid(fileID, StatusText):
     cur.execute (f"SELECT path from File WHERE file_id = '{fileID}'")
     tmp = cur.fetchone()
     if tmp :
+        StatusText['text'] = ""
         return tmp[0]
     else :
         StatusText['text'] = "no such fileid"
@@ -161,6 +168,7 @@ def SearchByString(input, StatusText) :
         cur.execute(command)
         tmp = cur.fetchall()
         if tmp :
+            StatusText['text'] = ""
             for item in tmp :
                 ret.append(item[0])
         else :
@@ -190,6 +198,7 @@ def SearchByString(input, StatusText) :
     if tmp :
         for item in tmp :
             ret.append(item[0])
+        StatusText['text'] = ""
     else :
         StatusText['text'] = "No file Found"
     return ret
@@ -204,6 +213,7 @@ def Login(username, psw):
         Pswd = psw
         return True
     except Exception as e: 
+        print(e)
         return False
 def Initialize():
     IniCon = MySQLdb.connect(host="localhost", user = rootName, password = rootPswd, db = "sys")
