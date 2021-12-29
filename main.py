@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.font as font
 from Event import *
+from Manage import *
 window = tk.Tk()
 ###
 BtnFont = font.Font(size=20)
@@ -15,14 +16,14 @@ def AddTagByDropDown() :
     tag_id = GetTagidByName(tag_var.get(), StatusText)
     file_id = GetFileidByPath(file_path.get(), StatusText)
     if file_id != -1 :
-        SetFileTag(file_id, tag_id)
+        SetFileTag(file_id, tag_id, StatusText)
         SetTagsShow()
 def AddTagByEntry() :
     tag_id = GetTagidByName(Tag_E.get(), StatusText)
     file_id = GetFileidByPath(file_path.get(), StatusText)
     Tag_E.delete(0, 'end')
     if file_id != -1 :
-        SetFileTag(file_id, tag_id)
+        SetFileTag(file_id, tag_id, StatusText)
         SetTagsShow()
 def SetTagsShow() :
     RemoveAllTagBtn()
@@ -51,6 +52,8 @@ def SetSearchResultWindow(PathList) :
         count += 1
 def OpenExploer(path):
     os.startfile(path)
+def OpenUserManager():
+    Manager = ManageUser(window, BtnFont)
 def _NewTag() :
     NewTag(Tag_Input, variable, StatusText)
     RefreshTagSystem(tag_d, tag_var, type_var.get())
@@ -60,10 +63,10 @@ def _Browse() :
     SetTagsShow()
 def _Check_Path() :
     global Now_fileID
-    Now_fileID = Check_Path(file_path.get())
+    Now_fileID = Check_Path(file_path.get(), StatusText)
     SetTagsShow()
 def _DeleteRelation(file_id, tag_id) :
-    DeleteRelation(file_id, tag_id)
+    DeleteRelation(file_id, tag_id, StatusText)
     SetTagsShow()
 def _SearchByString() :
     FileidList = SearchByString(Search_Input.get(), StatusText)
@@ -72,9 +75,10 @@ def _SearchByString() :
         PathList.append(GetPathByFileid(id, StatusText))
     SetSearchResultWindow(PathList)
 def _Login():
-    if Login(User_Input.get(), PSW_Input.get()) :
+    name = User_Input.get()
+    if Login(name, PSW_Input.get()) :
         Hide_Login()
-        ShowUI()
+        ShowUI(name)
         StatusText['text'] = ""
     else :
         StatusText['text'] = "login error"
@@ -103,6 +107,7 @@ Check_Btn = tk.Button(window, text ="Check", bg = "light blue", width = '10', he
 Add_Tag_Btn2 = tk.Button(window, text ="Add Tag", bg = "light blue", width = '10', height = '1', font = EntryFont)
 Search_Btn = tk.Button(window, text ="Search", bg = "light blue", width = '10', height = '1', font = BtnFont)
 Disconnect_Btn = tk.Button(window, text ="Disconnect", bg = "light blue", width = '10', height = '1', font = EntryFont)
+Manage_Btn = tk.Button(window, text ="Manage User", bg = "light blue", width = '10', height = '1', font = BtnFont)
 ##
 Regis_Btn = tk.Button(window, text ="Sign up", bg = "light blue", width = '10', height = '1', font = BtnFont)
 Login_Btn = tk.Button(window, text ="Login", bg = "light blue", width = '10', height = '1', font = BtnFont)
@@ -124,8 +129,8 @@ R_User_Input = tk.Entry(window, font = EntryFont, width = '20')
 R_User_Input.insert(0, 'input username')
 R_PSW_Input = tk.Entry(window, font = EntryFont, width = '20', show="*")
 ### checkbox
-IsAdmin = tk.BooleanVar()
-IsAdmin_Btn = tk.Checkbutton(window, text='Admin', var=IsAdmin, font = EntryFont)
+# IsAdmin = tk.BooleanVar()
+# IsAdmin_Btn = tk.Checkbutton(window, text='Admin', var=IsAdmin, font = EntryFont)
 ### dropdown
 variable = tk.StringVar(window)
 type_of_tag = tk.OptionMenu(window, variable, "")
@@ -149,8 +154,9 @@ Search_Btn.config(command = lambda:_SearchByString())
 Login_Btn.config(command = lambda:_Login())
 Disconnect_Btn.config(command = lambda:_Disconnect())
 Regis_Btn.config(command = lambda:_SignUp())
+Manage_Btn.config(command = lambda:OpenUserManager())
 ###
-def ShowUI():
+def ShowUI(name):
     global TypeList  
     TypeList = RefreshTypeList(type_of_tag, variable, type_d, type_var)
     New_Type_Btn.place(x = 50, y = 50)
@@ -169,6 +175,8 @@ def ShowUI():
     type_d.place(x = 208, y = 175)
     tag_d.place(x = 208, y = 215)
     Disconnect_Btn.place(x = 0, y = 0)
+    if name == "root" :
+        Manage_Btn.place(x = 750, y = 350)
 def HideUI():
     New_Type_Btn.place_forget()
     New_Tag_Btn.place_forget()
@@ -188,10 +196,11 @@ def HideUI():
     RemoveAllTagBtn()
     StatusText['text'] = ""
     Disconnect_Btn.place_forget()
+    Manage_Btn.place_forget()
 def Show_Login():
     R_User_Input.place(x = 650, y = 50)
     R_PSW_Input.place(x = 650, y = 80)
-    IsAdmin_Btn.place(x = 650, y = 110)
+    # IsAdmin_Btn.place(x = 650, y = 110)
     User_Input.place(x = 650, y = 250)
     PSW_Input.place(x = 650, y = 280)
     Regis_Btn.place(x = 650, y = 150)
@@ -199,7 +208,7 @@ def Show_Login():
 def Hide_Login() :
     R_User_Input.place_forget()
     R_PSW_Input.place_forget()
-    IsAdmin_Btn.place_forget()
+    # IsAdmin_Btn.place_forget()
     User_Input.place_forget()
     PSW_Input.place_forget()
     Regis_Btn.place_forget()

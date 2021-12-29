@@ -12,10 +12,14 @@ def NewType(Type_Input, DropDown_1, var_1, DropDown_2, var_2, StatusText) :
     if Type_Input.get()=="":
         StatusText['text'] = "Please input Type name"
     else :
-        cur=con.cursor()
-        cur.execute(f"INSERT into type Values(null, '{Type_Input.get()}')")
-        con.commit()
-        StatusText['text'] = ""
+        try :
+            cur=con.cursor()
+            cur.execute(f"INSERT into type Values(null, '{Type_Input.get()}')")
+            con.commit()
+            StatusText['text'] = ""
+        except MySQLdb.OperationalError as e :
+            print(e)
+            StatusText['text'] = "no access.\nPlease contact admin"
     Type_Input.delete(0, 'end')
     return RefreshTypeList(DropDown_1, var_1, DropDown_2, var_2)
 ###
@@ -38,12 +42,16 @@ def NewTag(Tag_Input, variable, StatusText):
     cur=con.cursor()
     if Tag_Input.get() != "":
         if variable.get() != "":
-            cur.execute(f"SELECT type_id from Type WHERE name='{variable.get()}'")
-            id = cur.fetchone()[0]
-            cur.execute(f"INSERT into Tag Values(null, '{Tag_Input.get()}', '{id}')")
-            con.commit()
-            Tag_Input.delete(0, 'end')
-            StatusText['text'] = ""
+            try :
+                cur.execute(f"SELECT type_id from Type WHERE name='{variable.get()}'")
+                id = cur.fetchone()[0]
+                cur.execute(f"INSERT into Tag Values(null, '{Tag_Input.get()}', '{id}')")
+                con.commit()
+                Tag_Input.delete(0, 'end')
+                StatusText['text'] = ""
+            except MySQLdb.OperationalError as e :
+                print(e)
+                StatusText['text'] = "no access.\nPlease contact admin"
         else:
             StatusText['text'] = "Please select Type"
     else:
@@ -57,31 +65,39 @@ def Browse(file_path, StatusText):
        return None
     StatusText['text'] = ""
     file_path.insert(0, filename)
-    return Check_Path(filename)
+    return Check_Path(filename, StatusText)
 ###
-def Check_Path(path) :
+def Check_Path(path, StatusText) :
     if path == "" :
         return
     cur=con.cursor()
     cur.execute (f"SELECT file_id from File WHERE path = '{path}'")
     tmp = cur.fetchone()
     if tmp == None :
-        file_id = InsertPath(path)
+        file_id = InsertPath(path, StatusText)
     else :
         file_id = tmp[0]
     return file_id
 ###
-def InsertPath(path):
-    cur=con.cursor()
-    cur.execute(f"Insert into File Values(null, '{path}', '{os.path.basename(path)}')")
-    con.commit()
-    cur.execute(f"SELECT file_id from File WHERE path = '{path}'")
+def InsertPath(path, StatusText):
+    try:
+        cur=con.cursor()
+        cur.execute(f"Insert into File Values(null, '{path}', '{os.path.basename(path)}')")
+        con.commit()
+        cur.execute(f"SELECT file_id from File WHERE path = '{path}'")
+    except MySQLdb.OperationalError as e :
+        print(e)
+        StatusText['text'] = "no access.\nPlease contact admin"
     return cur.fetchone()[0]
 ###
-def SetFileTag(file_id,tag_id):
-    cur=con.cursor()
-    cur.execute(f"Insert into Relation Values('{file_id}', '{tag_id}')")
-    con.commit()
+def SetFileTag(file_id,tag_id, StatusText):
+    try:
+        cur=con.cursor()
+        cur.execute(f"Insert into Relation Values('{file_id}', '{tag_id}')")
+        con.commit()
+    except MySQLdb.OperationalError as e :
+        print(e)
+        StatusText['text'] = "no access.\nPlease contact admin"
 ##
 def RefreshTagSystem(DropDown_1, var_1, type):
     DropDown_1['menu'].delete(0, 'end')
@@ -100,10 +116,14 @@ def RefreshTagSystem(DropDown_1, var_1, type):
         else : 
             var_1.set("")
 ###
-def DeleteRelation(file_id, tag_id) :
-    cur=con.cursor()
-    cur.execute(f"Delete from Relation WHERE file_id = {file_id} AND tag_id = {tag_id}")
-    con.commit()
+def DeleteRelation(file_id, tag_id, StatusText) :
+    try :
+        cur=con.cursor()
+        cur.execute(f"Delete from Relation WHERE file_id = {file_id} AND tag_id = {tag_id}")
+        con.commit()
+    except MySQLdb.OperationalError as e :
+        print(e)
+        StatusText['text'] = "no access.\nPlease contact admin"
 ###
 def GetTagsByFileID(file_id) :
     cur=con.cursor()
