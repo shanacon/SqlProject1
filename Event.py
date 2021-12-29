@@ -215,9 +215,22 @@ def Login(username, psw):
     except Exception as e: 
         print(e)
         return False
+def SignUp(username, psw):
+    global con
+    try :
+        SignCon = MySQLdb.connect(host="localhost", user = rootName, password = rootPswd, db = "sys")
+        cur = SignCon.cursor()
+        command = f"CREATE USER '{username}'@'localhost' IDENTIFIED BY '{psw}';"
+        cur.execute(command)
+        command = f"GRANT SELECT ON `filedata`.* To  '{username}'@'localhost';"
+        cur.execute(command)
+        return True
+    except Exception as e: 
+        print(e)
+        return False
 def Initialize():
     IniCon = MySQLdb.connect(host="localhost", user = rootName, password = rootPswd, db = "sys")
-    cur=IniCon.cursor()
+    cur = IniCon.cursor()
     command = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'filedata'"
     cur.execute(command)
     if cur.fetchone() == None:

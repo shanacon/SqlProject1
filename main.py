@@ -83,6 +83,14 @@ def _Disconnect():
     con = None
     Show_Login()
     HideUI()
+def _SignUp():
+    global con
+    if SignUp(R_User_Input.get(), R_PSW_Input.get()) :
+        StatusText['text'] = ""
+        R_User_Input.delete(0, 'end')
+        R_PSW_Input.delete(0, 'end')
+    else :
+        StatusText['text'] = "SignUp error"
 ### Label
 StatusText = tk.Label(window, text ="", font = EntryFont)
 StatusText.place(x = 380, y = 60)
@@ -140,6 +148,7 @@ Add_Tag_Btn2.config(command = lambda:AddTagByEntry())
 Search_Btn.config(command = lambda:_SearchByString())
 Login_Btn.config(command = lambda:_Login())
 Disconnect_Btn.config(command = lambda:_Disconnect())
+Regis_Btn.config(command = lambda:_SignUp())
 ###
 def ShowUI():
     global TypeList  
