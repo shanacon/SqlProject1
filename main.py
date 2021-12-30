@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.font as font
 from Event import *
 from ManageUser import *
+from ManageTag import *
 window = tk.Tk()
 ###
 BtnFont = font.Font(size=20)
@@ -57,6 +58,8 @@ def OpenExploer(path):
     os.startfile(path)
 def OpenUserManager():
     Manager = ManageUser(window, BtnFont, EntryFont)
+def OpenTagManager():
+    Manager = ManageTag(window, BtnFont, EntryFont)
 def _NewTag() :
     NewTag(Tag_Input, variable, StatusText)
     RefreshTagSystem(tag_d, tag_var, type_var.get())
@@ -111,7 +114,8 @@ Check_Btn = tk.Button(window, text ="Check", bg = "light blue", width = '10', he
 Add_Tag_Btn2 = tk.Button(window, text ="Add Tag", bg = "light blue", width = '10', height = '1', font = EntryFont)
 Search_Btn = tk.Button(window, text ="Search", bg = "light blue", width = '10', height = '1', font = BtnFont)
 Disconnect_Btn = tk.Button(window, text ="Disconnect", bg = "light blue", width = '10', height = '1', font = EntryFont)
-Manage_Btn = tk.Button(window, text ="Manage User", bg = "light blue", width = '10', height = '1', font = BtnFont)
+User_Manage_Btn = tk.Button(window, text ="Manage User", bg = "light blue", width = '10', height = '1', font = BtnFont)
+Tag_Manage_Btn = tk.Button(window, text ="Manage Tag", bg = "light blue", width = '10', height = '1', font = BtnFont)
 ##
 Regis_Btn = tk.Button(window, text ="Sign up", bg = "light blue", width = '10', height = '1', font = BtnFont)
 Login_Btn = tk.Button(window, text ="Login", bg = "light blue", width = '10', height = '1', font = BtnFont)
@@ -158,7 +162,8 @@ Search_Btn.config(command = lambda:_SearchByString())
 Login_Btn.config(command = lambda:_Login())
 Disconnect_Btn.config(command = lambda:_Disconnect())
 Regis_Btn.config(command = lambda:_SignUp())
-Manage_Btn.config(command = lambda:OpenUserManager())
+User_Manage_Btn.config(command = lambda:OpenUserManager())
+Tag_Manage_Btn.config(command = lambda:OpenTagManager())
 ###
 def ShowUI(name):
     global TypeList  
@@ -180,7 +185,8 @@ def ShowUI(name):
     tag_d.place(x = 208, y = 215)
     Disconnect_Btn.place(x = 0, y = 0)
     if name == "root" :
-        Manage_Btn.place(x = 840, y = 350)
+        User_Manage_Btn.place(x = 840, y = 350)
+        Tag_Manage_Btn.place(x = 840, y = 250)
 def HideUI():
     New_Type_Btn.place_forget()
     New_Tag_Btn.place_forget()
@@ -200,7 +206,8 @@ def HideUI():
     RemoveAllTagBtn()
     StatusText['text'] = ""
     Disconnect_Btn.place_forget()
-    Manage_Btn.place_forget()
+    User_Manage_Btn.place_forget()
+    Tag_Manage_Btn.place_forget()
 def Show_Login():
     R_User_Input.place(x = 650, y = 50)
     R_PSW_Input.place(x = 650, y = 80)

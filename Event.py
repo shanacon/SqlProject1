@@ -281,6 +281,24 @@ def GetAllUser():
         if item[0] != "mysql.sys" and item[0] != "root" :
             UserList.append(item[0])
     return UserList
+def GetAllType():
+    TypeList = []
+    cur = con.cursor()
+    cur.execute ("SELECT name from type")
+    for item in cur.fetchall():
+        TypeList.append(item[0])
+    return TypeList
+def GetAllTag(TypeName):
+    TagList = []
+    cur = con.cursor()
+    cur.execute (f"SELECT type_id from Type WHERE name = '{TypeName}'")
+    if TypeName != "" :
+        TypeName = cur.fetchone()[0]
+        TagList = []
+        cur.execute(f"SELECT name from Tag WHERE type = {TypeName}")
+        for item in cur.fetchall():
+            TagList.append(item[0])
+    return TagList
 def GetGrant(user):
     cur = ManagerCon.cursor()
     command = f"SHOW grants  for '{user}'@'localhost';"

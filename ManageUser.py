@@ -1,6 +1,5 @@
 import tkinter as tk
 from Event import *
-import MySQLdb
 class ManageUser: 
     def __init__(self, window, BtnFont, EntryFont):
         self.ManagePanel = tk.Toplevel(window)
