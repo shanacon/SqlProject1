@@ -90,14 +90,16 @@ def InsertPath(path, StatusText):
         StatusText['text'] = "no access.\nPlease contact admin"
     return cur.fetchone()[0]
 ###
-def SetFileTag(file_id,tag_id, StatusText):
+def SetFileTag(file_id, tag_id, StatusText):
     try:
         cur=con.cursor()
         cur.execute(f"Insert into Relation Values('{file_id}', '{tag_id}')")
         con.commit()
+        return True
     except MySQLdb.OperationalError as e :
         print(e)
         StatusText['text'] = "no access.\nPlease contact admin"
+        return False
 ##
 def RefreshTagSystem(DropDown_1, var_1, type):
     DropDown_1['menu'].delete(0, 'end')
@@ -121,9 +123,12 @@ def DeleteRelation(file_id, tag_id, StatusText) :
         cur=con.cursor()
         cur.execute(f"Delete from Relation WHERE file_id = {file_id} AND tag_id = {tag_id}")
         con.commit()
+        StatusText['text'] = ""
+        return True
     except MySQLdb.OperationalError as e :
-        print(e)
         StatusText['text'] = "no access.\nPlease contact admin"
+        print(e)
+        return False
 ###
 def GetTagsByFileID(file_id) :
     cur=con.cursor()

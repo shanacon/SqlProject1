@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.font as font
 from Event import *
-from Manage import *
+from ManageUser import *
 window = tk.Tk()
 ###
 BtnFont = font.Font(size=20)
@@ -16,15 +16,18 @@ def AddTagByDropDown() :
     tag_id = GetTagidByName(tag_var.get(), StatusText)
     file_id = GetFileidByPath(file_path.get(), StatusText)
     if file_id != -1 :
-        SetFileTag(file_id, tag_id, StatusText)
-        SetTagsShow()
+        result = SetFileTag(file_id, tag_id, StatusText)
+        if result:
+            SetTagsShow()
+    
 def AddTagByEntry() :
     tag_id = GetTagidByName(Tag_E.get(), StatusText)
     file_id = GetFileidByPath(file_path.get(), StatusText)
     Tag_E.delete(0, 'end')
     if file_id != -1 :
-        SetFileTag(file_id, tag_id, StatusText)
-        SetTagsShow()
+        result = SetFileTag(file_id, tag_id, StatusText)
+        if result:
+            SetTagsShow()
 def SetTagsShow() :
     RemoveAllTagBtn()
     FileTagList = GetTagsByFileID(Now_fileID)
@@ -53,7 +56,7 @@ def SetSearchResultWindow(PathList) :
 def OpenExploer(path):
     os.startfile(path)
 def OpenUserManager():
-    Manager = ManageUser(window, BtnFont)
+    Manager = ManageUser(window, BtnFont, EntryFont)
 def _NewTag() :
     NewTag(Tag_Input, variable, StatusText)
     RefreshTagSystem(tag_d, tag_var, type_var.get())
@@ -66,8 +69,9 @@ def _Check_Path() :
     Now_fileID = Check_Path(file_path.get(), StatusText)
     SetTagsShow()
 def _DeleteRelation(file_id, tag_id) :
-    DeleteRelation(file_id, tag_id, StatusText)
-    SetTagsShow()
+    result = DeleteRelation(file_id, tag_id, StatusText)
+    if result:
+        SetTagsShow()
 def _SearchByString() :
     FileidList = SearchByString(Search_Input.get(), StatusText)
     PathList = []
