@@ -8,6 +8,7 @@ Pswd = ""
 rootName = "root"
 rootPswd = "w123741852"
 con = None
+ManagerCon = None
 def NewType(Type_Input, DropDown_1, var_1, DropDown_2, var_2, StatusText) :
     if Type_Input.get()=="":
         StatusText['text'] = "Please input Type name"
@@ -254,8 +255,9 @@ def SignUp(username, psw):
         print(e)
         return False
 def Initialize():
-    IniCon = MySQLdb.connect(host="localhost", user = rootName, password = rootPswd, db = "sys")
-    cur = IniCon.cursor()
+    global ManagerCon
+    ManagerCon = MySQLdb.connect(host="localhost", user = rootName, password = rootPswd, db = "sys")
+    cur = ManagerCon.cursor()
     command = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'filedata'"
     cur.execute(command)
     if cur.fetchone() == None:
@@ -270,12 +272,31 @@ def Initialize():
         command = "CREATE TABLE `filedata`.`relation` ( `file_id` INT NOT NULL, `tag_id` INT NOT NULL, INDEX `file_id_idx` (`file_id` ASC) VISIBLE, INDEX `tag_id_idx` (`tag_id` ASC) VISIBLE, CONSTRAINT `file_id` FOREIGN KEY (`file_id`) REFERENCES `filedata`.`file` (`file_id`) ON DELETE NO ACTION ON UPDATE NO ACTION, CONSTRAINT `tag_id` FOREIGN KEY (`tag_id`) REFERENCES `filedata`.`tag` (`tag_id`) ON DELETE NO ACTION ON UPDATE NO ACTION);"
         cur.execute(command)
 def GetAllUser():
-    MaanagerCon = MySQLdb.connect(host="localhost", user = UserName, password = Pswd, db = "sys")
-    cur = MaanagerCon.cursor()
+    # ManagerCon = MySQLdb.connect(host="localhost", user = UserName, password = Pswd, db = "sys")
+    cur = ManagerCon.cursor()
     command = "Select user from mysql.user;"
     cur.execute(command)
     UserList = []
     for item in cur.fetchall():
-        if item[0] != "mysql.sys" :
+        if item[0] != "mysql.sys" and item[0] != "root" :
             UserList.append(item[0])
     return UserList
+def GetGrant(user):
+    cur = ManagerCon.cursor()
+    command = f"SHOW grants  for '{user}'@'localhost';"
+    cur.execute(command)
+    Data = [False, False, False]
+    for item in cur.fetchall():
+        aya = item[0].split(' ')
+        if "`filedata`.*" in aya :
+            tmp = ""
+            for i in range(1, aya.index("`filedata`.*") - 1) :
+                tmp += aya[i]
+            tmp = tmp.split(',')
+            if "SELECT" in tmp:
+                Data[0] = True
+            if "INSERT" in tmp:
+                Data[1] = True
+            if "DELETE" in tmp:
+                Data[2] = True
+    return Data
