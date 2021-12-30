@@ -336,3 +336,8 @@ def Save(user, grants):
     else :
         command = f"revoke DELETE on filedata.* from '{user}'@'localhost';"
     cur.execute(command)
+def Rename(OldName, NewName):
+    cur = con.cursor()
+    command = f"UPDATE tag SET name = '{NewName}' WHERE name = '{OldName}';"
+    cur.execute(command)
+    con.commit()
