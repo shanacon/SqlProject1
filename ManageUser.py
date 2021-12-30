@@ -20,9 +20,12 @@ class ManageUser:
         self.CanDelete_Box = tk.Checkbutton(self.ManagePanel, text='Can Delete Tag', var = self.CanDelete, font = EntryFont)
         ###
         self.SaveBtn = tk.Button(self.ManagePanel, text = "Save", bg = "antique white", width = '10', height = '1', font = BtnFont)
+        self.SaveBtn.config(command = lambda:self._Save())
+        self.SelectUser = None
     def OpenUser(self, user):
         grants = GetGrant(user)
         self.ShowUI(grants)
+        self.SelectUser = user
     def ShowUI(self, grants) :
         self.CanSelect_Box.place(x= 300, y = 0)
         self.CanInsert_Box.place(x= 300, y = 100)
@@ -40,3 +43,6 @@ class ManageUser:
             self.CanDelete.set(True)
         else :
             self.CanDelete.set(False)
+    def _Save(self):
+        grants = [self.CanSelect.get(), self.CanInsert.get(), self.CanDelete.get()]
+        Save(self.SelectUser, grants)

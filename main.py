@@ -180,7 +180,7 @@ def ShowUI(name):
     tag_d.place(x = 208, y = 215)
     Disconnect_Btn.place(x = 0, y = 0)
     if name == "root" :
-        Manage_Btn.place(x = 750, y = 350)
+        Manage_Btn.place(x = 840, y = 350)
 def HideUI():
     New_Type_Btn.place_forget()
     New_Tag_Btn.place_forget()

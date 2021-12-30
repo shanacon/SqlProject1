@@ -300,3 +300,21 @@ def GetGrant(user):
             if "DELETE" in tmp:
                 Data[2] = True
     return Data
+def Save(user, grants):
+    cur = ManagerCon.cursor()
+    command = ""
+    if grants[0] :
+        command = f"GRANT SELECT ON `filedata`.* To  '{user}'@'localhost';"
+    else :
+        command = f"revoke SELECT on filedata.* from '{user}'@'localhost';"
+    cur.execute(command)
+    if grants[1] :
+        command = f"GRANT INSERT ON `filedata`.* To  '{user}'@'localhost';"
+    else :
+        command = f"revoke INSERT on filedata.* from '{user}'@'localhost';"
+    cur.execute(command)
+    if grants[2] :
+        command = f"GRANT DELETE ON `filedata`.* To  '{user}'@'localhost';"
+    else :
+        command = f"revoke DELETE on filedata.* from '{user}'@'localhost';"
+    cur.execute(command)
