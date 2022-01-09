@@ -272,13 +272,13 @@ def Initialize():
         command = "CREATE TABLE `filedata`.`relation` ( `file_id` INT NOT NULL, `tag_id` INT NOT NULL, INDEX `file_id_idx` (`file_id` ASC) VISIBLE, INDEX `tag_id_idx` (`tag_id` ASC) VISIBLE, CONSTRAINT `file_id` FOREIGN KEY (`file_id`) REFERENCES `filedata`.`file` (`file_id`) ON DELETE NO ACTION ON UPDATE NO ACTION, CONSTRAINT `tag_id` FOREIGN KEY (`tag_id`) REFERENCES `filedata`.`tag` (`tag_id`) ON DELETE NO ACTION ON UPDATE NO ACTION);"
         cur.execute(command)
 def GetAllUser():
-    # ManagerCon = MySQLdb.connect(host="localhost", user = UserName, password = Pswd, db = "sys")
+    ManagerCon = MySQLdb.connect(host="localhost", user = UserName, password = Pswd, db = "sys")
     cur = ManagerCon.cursor()
     command = "Select user from mysql.user;"
     cur.execute(command)
     UserList = []
     for item in cur.fetchall():
-        if item[0] != "mysql.sys" and item[0] != "root" :
+        if item[0] != "mysql.sys" and item[0] != "root" and item[0] != "mysql.infoschema" and item[0] != "mysql.session":
             UserList.append(item[0])
     return UserList
 def GetAllType():
